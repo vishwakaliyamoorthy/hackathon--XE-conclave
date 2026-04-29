@@ -22,10 +22,14 @@ class SupabaseService:
     def __init__(self):
         """Initialize Supabase client."""
         try:
-            self.client: Client = create_client(
-                settings.SUPABASE_URL,
-                settings.SUPABASE_KEY
-            )
+            supabase_url = settings.SUPABASE_URL
+            # Use service role key if available (to bypass RLS for backend operations), otherwise fallback to anon key
+            supabase_key = settings.SUPABASE_SERVICE_ROLE_KEY or settings.SUPABASE_KEY
+            
+            if not supabase_url or not supabase_key:
+                logger.warning("Supabase credentials not fully configured")
+                
+            self.client: Client = create_client(supabase_url, supabase_key)
             logger.info("Supabase client initialized successfully")
         except Exception as e:
             logger.error(f"Failed to initialize Supabase client: {e}")

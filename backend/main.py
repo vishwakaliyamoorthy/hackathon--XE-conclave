@@ -11,8 +11,9 @@ from fastapi.staticfiles import StaticFiles
 from config import get_settings
 from middleware import (
     RequestIdMiddleware, ExceptionMiddleware, LoggingMiddleware,
-    CORSMiddleware, RateLimitMiddleware
+    RateLimitMiddleware
 )
+from fastapi.middleware.cors import CORSMiddleware
 from routes_auth import router as auth_router
 from routes_upload import router as upload_router
 from routes_analyze import router as analyze_router
@@ -71,7 +72,15 @@ app = FastAPI(
 
 # Add middleware (order matters - add in reverse order of execution)
 app.add_middleware(RateLimitMiddleware)
-app.add_middleware(CORSMiddleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["X-Request-ID"],
+    max_age=3600,
+)
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(ExceptionMiddleware)
 app.add_middleware(RequestIdMiddleware)

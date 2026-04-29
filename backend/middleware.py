@@ -125,30 +125,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         return response
 
 
-class CORSMiddleware(BaseHTTPMiddleware):
-    """Custom CORS middleware."""
 
-    async def dispatch(self, request: Request, call_next: Callable) -> Response:
-        """Handle CORS headers."""
-        # Handle preflight requests
-        if request.method == "OPTIONS":
-            return Response(
-                headers={
-                    "Access-Control-Allow-Origin": ", ".join(settings.CORS_ORIGINS),
-                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
-                    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Request-ID",
-                    "Access-Control-Max-Age": "3600",
-                }
-            )
-
-        response = await call_next(request)
-
-        # Add CORS headers to response
-        response.headers["Access-Control-Allow-Origin"] = ", ".join(settings.CORS_ORIGINS)
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Request-ID"
-
-        return response
 
 
 class RateLimitMiddleware(BaseHTTPMiddleware):

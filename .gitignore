@@ -4,3 +4,5 @@ __pycache__/
 node_modules/
 .next/
 dist/
+backend/venv_linux/
+backend/venv_linux_v2/

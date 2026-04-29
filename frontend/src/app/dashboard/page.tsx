@@ -28,6 +28,12 @@ export default function DashboardPage() {
       body: formData
     });
     
+    if (response.status === 401) {
+      localStorage.removeItem("token");
+      router.push("/auth/login");
+      throw new Error("Session expired. Please log in again.");
+    }
+    
     if (!response.ok) {
       throw new Error(`Failed to upload ${type} document`);
     }
@@ -95,9 +101,9 @@ export default function DashboardPage() {
       
       // Navigate to analysis page with ID
       router.push(`/analysis?id=${analysisId}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Analysis Error:", error);
-      alert("Failed to start analysis. Check console.");
+      alert(error.message || "Failed to start analysis. Check console.");
       setAnalyzing(false);
     }
   };

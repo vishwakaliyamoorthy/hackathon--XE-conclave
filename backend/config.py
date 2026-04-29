@@ -44,6 +44,7 @@ class Settings(BaseSettings):
 
     # API Keys
     OPENAI_API_KEY: Optional[str] = None
+    GEMINI_API_KEY: Optional[str] = None
 
     # Logging
     LOG_FORMAT: str = "json"
